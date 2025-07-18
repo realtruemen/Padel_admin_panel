@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:data_table_2/data_table_2.dart';
+import 'package:provider/provider.dart';
 import '../generated/app_localizations.dart';
+import '../providers/currency_provider.dart';
 
 class BookingsScreen extends StatefulWidget {
   const BookingsScreen({super.key});
@@ -10,48 +12,57 @@ class BookingsScreen extends StatefulWidget {
 }
 
 class _BookingsScreenState extends State<BookingsScreen> {
-  final List<Map<String, dynamic>> _bookings = [
-    {
-      'id': 1,
-      'courtName': 'Court 1',
-      'customer': 'John Doe',
-      'date': '2024-07-18',
-      'time': '09:00 - 10:30',
-      'status': 'confirmed',
-      'price': '€25.00',
-    },
-    {
-      'id': 2,
-      'courtName': 'Court 2',
-      'customer': 'Jane Smith',
-      'date': '2024-07-18',
-      'time': '10:30 - 12:00',
-      'status': 'pending',
-      'price': '€25.00',
-    },
-    {
-      'id': 3,
-      'courtName': 'Court 3',
-      'customer': 'Mike Johnson',
-      'date': '2024-07-18',
-      'time': '14:00 - 15:30',
-      'status': 'confirmed',
-      'price': '€30.00',
-    },
-    {
-      'id': 4,
-      'courtName': 'Court 1',
-      'customer': 'Sarah Wilson',
-      'date': '2024-07-19',
-      'time': '16:00 - 17:30',
-      'status': 'cancelled',
-      'price': '€25.00',
-    },
-  ];
+  List<int> _deletedBookingIds = [];
+
+  List<Map<String, dynamic>> _getBookingsData(CurrencyProvider currencyProvider) {
+    final allBookings = [
+      {
+        'id': 1,
+        'courtName': 'Court 1',
+        'customer': 'John Doe',
+        'date': '2024-07-18',
+        'time': '09:00 - 10:30',
+        'status': 'confirmed',
+        'price': currencyProvider.formatPrice(25.00),
+      },
+      {
+        'id': 2,
+        'courtName': 'Court 2',
+        'customer': 'Jane Smith',
+        'date': '2024-07-18',
+        'time': '10:30 - 12:00',
+        'status': 'pending',
+        'price': currencyProvider.formatPrice(25.00),
+      },
+      {
+        'id': 3,
+        'courtName': 'Court 3',
+        'customer': 'Mike Johnson',
+        'date': '2024-07-18',
+        'time': '14:00 - 15:30',
+        'status': 'confirmed',
+        'price': currencyProvider.formatPrice(30.00),
+      },
+      {
+        'id': 4,
+        'courtName': 'Court 1',
+        'customer': 'Sarah Wilson',
+        'date': '2024-07-19',
+        'time': '16:00 - 17:30',
+        'status': 'cancelled',
+        'price': currencyProvider.formatPrice(25.00),
+      },
+    ];
+    
+    // Silinen booking'leri filtrele
+    return allBookings.where((booking) => !_deletedBookingIds.contains(booking['id'])).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
+    final currencyProvider = Provider.of<CurrencyProvider>(context);
+    final bookings = _getBookingsData(currencyProvider);
     
     return Scaffold(
       body: Padding(
@@ -161,7 +172,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
                         ),
                       ),
                     ],
-                    rows: _bookings.map((booking) {
+                    rows: bookings.map((booking) {
                       return DataRow2(
                         cells: [
                           DataCell(Text(booking['id'].toString())),
@@ -308,7 +319,7 @@ class _BookingsScreenState extends State<BookingsScreen> {
             onPressed: () {
               Navigator.pop(context);
               setState(() {
-                _bookings.removeWhere((b) => b['id'] == booking['id']);
+                _deletedBookingIds.add(booking['id']);
               });
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

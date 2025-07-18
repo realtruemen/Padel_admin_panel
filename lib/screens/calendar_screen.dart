@@ -202,13 +202,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
       appBar: AppBar(
         title: Text(
           localizations.calendar,
-          style: const TextStyle(
-            color: Colors.black,
+          style: TextStyle(
+            color: Theme.of(context).appBarTheme.foregroundColor,
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         elevation: 0,
         automaticallyImplyLeading: false,
       ),
@@ -220,13 +220,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
             child: Column(
               children: [
                 Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black12,
+                        color: Theme.of(context).shadowColor.withOpacity(0.1),
                         blurRadius: 4,
-                        offset: Offset(0, 2),
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
@@ -271,10 +271,12 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           margin: const EdgeInsets.all(2.0),
                           height: 70,
                           decoration: BoxDecoration(
-                            color: isPast ? Colors.grey[200] : Colors.white,
+                            color: isPast 
+                                ? Theme.of(context).disabledColor.withOpacity(0.3)
+                                : Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(8.0),
                             border: Border.all(
-                              color: Colors.grey[300]!,
+                              color: Theme.of(context).dividerColor,
                               width: 1,
                             ),
                           ),
@@ -298,7 +300,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   child: Text(
                                     '${day.day}',
                                     style: TextStyle(
-                                      color: bookings.isNotEmpty ? Colors.white : (isPast ? Colors.grey[600] : Colors.black),
+                                      color: bookings.isNotEmpty 
+                                          ? Colors.white 
+                                          : (isPast 
+                                              ? Theme.of(context).disabledColor 
+                                              : Theme.of(context).textTheme.bodyLarge?.color),
                                       fontWeight: bookings.isNotEmpty ? FontWeight.bold : FontWeight.normal,
                                       fontSize: 12,
                                     ),
@@ -315,7 +321,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                           : '+${bookings.length} bookings',
                                       style: TextStyle(
                                         fontSize: 8,
-                                        color: isPast ? Colors.grey[600] : Colors.black87,
+                                        color: isPast 
+                                            ? Theme.of(context).disabledColor 
+                                            : Theme.of(context).textTheme.bodyMedium?.color,
                                       ),
                                       textAlign: TextAlign.center,
                                       maxLines: 3,
@@ -476,7 +484,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16.0),
-                  color: Colors.grey[50],
+                  color: Theme.of(context).colorScheme.background,
                   child: _buildCalendarLegend(context, localizations),
                 ),
               ],
@@ -494,7 +502,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           Expanded(
             flex: 1,
             child: Container(
-              color: Colors.grey[50],
+              color: Theme.of(context).colorScheme.background,
               child: _buildBookingsSection(context, localizations),
             ),
           ),
@@ -512,7 +520,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
         _buildLegendItem(color: Colors.green, label: localizations.confirmed),
         _buildLegendItem(color: Colors.orange, label: localizations.pending),
         _buildLegendItem(color: Colors.red, label: localizations.cancelled),
-        _buildLegendItem(color: Colors.grey[200]!, label: 'Past Dates', textColor: Colors.grey[600]),
+        _buildLegendItem(
+          color: Colors.grey[200]!, 
+          label: 'Past Dates', 
+          textColor: Theme.of(context).disabledColor,
+        ),
       ],
     );
   }
@@ -528,7 +540,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 'Bookings for ${_selectedDay?.day}/${_selectedDay?.month}/${_selectedDay?.year}',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 18, 
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.headlineSmall?.color,
+                ),
               ),
             ),
             Expanded(
@@ -541,7 +557,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           const SizedBox(height: 16),
                           Text(
                             'No bookings this day',
-                            style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                            style: TextStyle(
+                              fontSize: 16, 
+                              color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.6),
+                            ),
                           ),
                         ],
                       ),
@@ -571,7 +590,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               booking['courtName'],
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: isPast ? Colors.grey[600] : Colors.black,
+                                color: isPast 
+                                    ? Theme.of(context).disabledColor 
+                                    : Theme.of(context).textTheme.titleMedium?.color,
                               ),
                             ),
                             subtitle: Column(
@@ -580,17 +601,27 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 const SizedBox(height: 8),
                                 Text(
                                   'Customer: ${booking['customer']}',
-                                  style: TextStyle(color: isPast ? Colors.grey[600] : Colors.black87),
+                                  style: TextStyle(
+                                    color: isPast 
+                                        ? Theme.of(context).disabledColor 
+                                        : Theme.of(context).textTheme.bodyMedium?.color,
+                                  ),
                                 ),
                                 const SizedBox(height: 4),
                                 Row(
                                   children: [
-                                    Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
+                                    Icon(
+                                      Icons.access_time, 
+                                      size: 16, 
+                                      color: Theme.of(context).iconTheme.color?.withOpacity(0.6),
+                                    ),
                                     const SizedBox(width: 4),
                                     Text(
                                       booking['time'],
                                       style: TextStyle(
-                                        color: isPast ? Colors.grey[600] : Colors.black87,
+                                        color: isPast 
+                                            ? Theme.of(context).disabledColor 
+                                            : Theme.of(context).textTheme.bodyMedium?.color,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
@@ -598,7 +629,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                     Text(
                                       booking['price'],
                                       style: TextStyle(
-                                        color: isPast ? Colors.grey[600] : Colors.green[700],
+                                        color: isPast 
+                                            ? Theme.of(context).disabledColor 
+                                            : Colors.green[700],
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
                                       ),
@@ -655,7 +688,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
           label,
           style: TextStyle(
             fontSize: 12,
-            color: textColor ?? Colors.black87,
+            color: textColor ?? Theme.of(context).textTheme.bodySmall?.color,
           ),
         ),
       ],

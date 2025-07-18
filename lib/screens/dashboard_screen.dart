@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:provider/provider.dart';
 import '../generated/app_localizations.dart';
+import '../providers/currency_provider.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
@@ -45,6 +47,8 @@ class DashboardScreen extends StatelessWidget {
   }
 
   Widget _buildStatsCards(BuildContext context, AppLocalizations localizations) {
+    final currencyProvider = Provider.of<CurrencyProvider>(context);
+    
     return Row(
       children: [
         Expanded(
@@ -81,7 +85,7 @@ class DashboardScreen extends StatelessWidget {
           child: _buildStatCard(
             context,
             localizations.revenue,
-            '€15,420',
+            currencyProvider.formatPrice(15420.00),
             Icons.attach_money,
             const Color(0xFF9C27B0),
           ),

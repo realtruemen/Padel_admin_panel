@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/language_provider.dart';
 import '../providers/currency_provider.dart';
+import '../providers/theme_provider.dart';
 import '../generated/app_localizations.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -12,6 +13,7 @@ class SettingsScreen extends StatelessWidget {
     final localizations = AppLocalizations.of(context)!;
     final languageProvider = Provider.of<LanguageProvider>(context);
     final currencyProvider = Provider.of<CurrencyProvider>(context);
+    final themeProvider = Provider.of<ThemeProvider>(context);
     
     return Scaffold(
       body: Padding(
@@ -30,24 +32,30 @@ class SettingsScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Column(
-                      children: [
-                        _buildLanguageSettings(context, localizations, languageProvider),
-                        const SizedBox(height: 16),
-                        _buildCurrencySettings(context, localizations, currencyProvider),
-                        const SizedBox(height: 16),
-                        _buildGeneralSettings(context, localizations),
-                      ],
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _buildLanguageSettings(context, localizations, languageProvider),
+                          const SizedBox(height: 16),
+                          _buildThemeSettings(context, localizations, themeProvider),
+                          const SizedBox(height: 16),
+                          _buildCurrencySettings(context, localizations, currencyProvider),
+                          const SizedBox(height: 16),
+                          _buildGeneralSettings(context, localizations),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: Column(
-                      children: [
-                        _buildNotificationSettings(context, localizations),
-                        const SizedBox(height: 16),
-                        _buildSystemSettings(context, localizations),
-                      ],
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _buildNotificationSettings(context, localizations),
+                          const SizedBox(height: 16),
+                          _buildSystemSettings(context, localizations),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -392,6 +400,221 @@ class SettingsScreen extends StatelessWidget {
               'Current: ${currencyProvider.formatPrice(25.00)} (Sample price)',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 16),
+            if (currencyProvider.currentCurrency != currencyProvider.baseCurrency) ...[
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue[200]!),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Exchange Rate Info',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue[800],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '1 ${currencyProvider.baseCurrency} = ${currencyProvider.getConversionRate(currencyProvider.baseCurrency, currencyProvider.currentCurrency).toStringAsFixed(4)} ${currencyProvider.currentCurrency}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.blue[700],
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'All prices are automatically converted from EUR base currency.',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.grey[600],
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+            const SizedBox(height: 16),
+            // Exchange rate controls
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (currencyProvider.lastUpdated != null) ...[
+                        Text(
+                          'Last Updated: ${_formatDateTime(currencyProvider.lastUpdated!)}',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ] else ...[
+                        Text(
+                          'Exchange rates not updated yet',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.orange[700],
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                ElevatedButton.icon(
+                  onPressed: currencyProvider.isLoading ? null : () {
+                    currencyProvider.fetchExchangeRates();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Updating exchange rates...'),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                  icon: currencyProvider.isLoading 
+                      ? SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Icon(Icons.refresh, size: 18),
+                  label: Text('Update Rates'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue[600],
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  String _formatDateTime(DateTime dateTime) {
+    return '${dateTime.day}/${dateTime.month}/${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+  
+  Widget _buildThemeSettings(
+    BuildContext context,
+    AppLocalizations localizations,
+    ThemeProvider themeProvider,
+  ) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  themeProvider.isDarkMode ? Icons.dark_mode : Icons.light_mode,
+                  color: themeProvider.isDarkMode ? Colors.amber : Colors.orange,
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  'Theme',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Choose your preferred theme mode',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: RadioListTile<bool>(
+                    title: Row(
+                      children: [
+                        Icon(Icons.light_mode, size: 20, color: Colors.orange),
+                        const SizedBox(width: 8),
+                        const Text('Light Mode'),
+                      ],
+                    ),
+                    value: false,
+                    groupValue: themeProvider.isDarkMode,
+                    onChanged: (value) {
+                      if (value != null) {
+                        themeProvider.setTheme(value);
+                      }
+                    },
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+                Expanded(
+                  child: RadioListTile<bool>(
+                    title: Row(
+                      children: [
+                        Icon(Icons.dark_mode, size: 20, color: Colors.amber),
+                        const SizedBox(width: 8),
+                        const Text('Dark Mode'),
+                      ],
+                    ),
+                    value: true,
+                    groupValue: themeProvider.isDarkMode,
+                    onChanged: (value) {
+                      if (value != null) {
+                        themeProvider.setTheme(value);
+                      }
+                    },
+                    contentPadding: EdgeInsets.zero,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: themeProvider.isDarkMode 
+                    ? Colors.amber[50] 
+                    : Colors.orange[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: themeProvider.isDarkMode 
+                      ? Colors.amber[200]! 
+                      : Colors.orange[200]!,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    size: 20,
+                    color: themeProvider.isDarkMode 
+                        ? Colors.amber[700] 
+                        : Colors.orange[700],
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Current: ${themeProvider.themeName} Mode',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: themeProvider.isDarkMode 
+                            ? Colors.amber[700] 
+                            : Colors.orange[700],
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

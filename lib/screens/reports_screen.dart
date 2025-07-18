@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:provider/provider.dart';
 import '../generated/app_localizations.dart';
+import '../providers/currency_provider.dart';
 
 class ReportsScreen extends StatelessWidget {
   const ReportsScreen({super.key});
+
+  List<Map<String, dynamic>> _getTopCustomers(CurrencyProvider currencyProvider) {
+    return [
+      {'name': 'John Doe', 'bookings': 25, 'revenue': currencyProvider.formatPrice(625.00)},
+      {'name': 'Jane Smith', 'bookings': 18, 'revenue': currencyProvider.formatPrice(450.00)},
+      {'name': 'Mike Johnson', 'bookings': 15, 'revenue': currencyProvider.formatPrice(375.00)},
+      {'name': 'Sarah Wilson', 'bookings': 12, 'revenue': currencyProvider.formatPrice(300.00)},
+      {'name': 'David Brown', 'bookings': 10, 'revenue': currencyProvider.formatPrice(250.00)},
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -251,57 +263,54 @@ class ReportsScreen extends StatelessWidget {
   }
 
   Widget _buildTopCustomers(BuildContext context, AppLocalizations localizations) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Top Customers',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+    return Consumer<CurrencyProvider>(
+      builder: (context, currencyProvider, child) {
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Top Customers',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: 5,
+                    itemBuilder: (context, index) {
+                      final customers = _getTopCustomers(currencyProvider);
+                      final customer = customers[index];
+                      
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: const Color(0xFF2196F3),
+                          child: Text(
+                            '${index + 1}',
+                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        title: Text(customer['name'] as String),
+                        subtitle: Text('${customer['bookings']} bookings'),
+                        trailing: Text(
+                          customer['revenue'] as String,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF4CAF50),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  final customers = [
-                    {'name': 'John Doe', 'bookings': 25, 'revenue': '€625'},
-                    {'name': 'Jane Smith', 'bookings': 18, 'revenue': '€450'},
-                    {'name': 'Mike Johnson', 'bookings': 15, 'revenue': '€375'},
-                    {'name': 'Sarah Wilson', 'bookings': 12, 'revenue': '€300'},
-                    {'name': 'David Brown', 'bookings': 10, 'revenue': '€250'},
-                  ];
-                  
-                  final customer = customers[index];
-                  
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: const Color(0xFF2196F3),
-                      child: Text(
-                        '${index + 1}',
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    title: Text(customer['name'] as String),
-                    subtitle: Text('${customer['bookings']} bookings'),
-                    trailing: Text(
-                      customer['revenue'] as String,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF4CAF50),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

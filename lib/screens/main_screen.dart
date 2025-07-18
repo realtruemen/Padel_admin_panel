@@ -99,13 +99,17 @@ class _MainScreenState extends State<MainScreen> {
         ],
       ),
       drawer: Drawer(
+        backgroundColor: Theme.of(context).drawerTheme.backgroundColor,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Color(0xFF2196F3), Color(0xFF21CBF3)],
+                  colors: [
+                    Theme.of(context).primaryColor,
+                    Theme.of(context).primaryColor.withOpacity(0.8),
+                  ],
                 ),
               ),
               child: Column(
@@ -183,21 +187,27 @@ class _MainScreenState extends State<MainScreen> {
     required int index,
   }) {
     final isSelected = _selectedIndex == index;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     
     return ListTile(
       leading: Icon(
         icon,
-        color: isSelected ? const Color(0xFF2196F3) : Colors.grey,
+        color: isSelected 
+          ? theme.primaryColor 
+          : (isDark ? Colors.grey[400] : Colors.grey[600]),
       ),
       title: Text(
         title,
         style: TextStyle(
-          color: isSelected ? const Color(0xFF2196F3) : Colors.black87,
+          color: isSelected 
+            ? theme.primaryColor 
+            : theme.textTheme.bodyLarge?.color,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),
       ),
       selected: isSelected,
-      selectedTileColor: const Color(0xFF2196F3).withOpacity(0.1),
+      selectedTileColor: theme.primaryColor.withOpacity(0.1),
       onTap: () {
         setState(() {
           _selectedIndex = index;

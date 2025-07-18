@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../generated/app_localizations.dart';
+import '../providers/currency_provider.dart';
 
 class CourtsScreen extends StatefulWidget {
   const CourtsScreen({super.key});
@@ -9,35 +11,39 @@ class CourtsScreen extends StatefulWidget {
 }
 
 class _CourtsScreenState extends State<CourtsScreen> {
-  final List<Map<String, dynamic>> _courts = [
-    {
-      'id': 1,
-      'name': 'Court 1',
-      'location': 'Building A',
-      'status': 'active',
-      'capacity': 4,
-      'price': '€25.00/hour',
-      'amenities': ['Lighting', 'Air Conditioning', 'Equipment Rental'],
-    },
-    {
-      'id': 2,
-      'name': 'Court 2',
-      'location': 'Building A',
-      'status': 'active',
-      'capacity': 4,
-      'price': '€25.00/hour',
-      'amenities': ['Lighting', 'Equipment Rental'],
-    },
-    {
-      'id': 3,
-      'name': 'Court 3',
-      'location': 'Building B',
-      'status': 'inactive',
-      'capacity': 4,
-      'price': '€30.00/hour',
-      'amenities': ['Lighting', 'Air Conditioning', 'Sound System'],
-    },
-  ];
+  List<Map<String, dynamic>> _getCourtsList(CurrencyProvider currencyProvider) {
+    return [
+      {
+        'id': 1,
+        'name': 'Court 1',
+        'location': 'Building A',
+        'status': 'active',
+        'capacity': 4,
+        'price': '${currencyProvider.formatPrice(25.00)}/hour',
+        'amenities': ['Lighting', 'Air Conditioning', 'Equipment Rental'],
+      },
+      {
+        'id': 2,
+        'name': 'Court 2',
+        'location': 'Building A',
+        'status': 'active',
+        'capacity': 4,
+        'price': '${currencyProvider.formatPrice(25.00)}/hour',
+        'amenities': ['Lighting', 'Equipment Rental'],
+      },
+      {
+        'id': 3,
+        'name': 'Court 3',
+        'location': 'Building B',
+        'status': 'inactive',
+        'capacity': 4,
+        'price': '${currencyProvider.formatPrice(30.00)}/hour',
+        'amenities': ['Lighting', 'Air Conditioning', 'Sound System'],
+      },
+    ];
+  }
+
+  final List<Map<String, dynamic>> _courts = [];
 
   @override
   Widget build(BuildContext context) {
@@ -67,17 +73,22 @@ class _CourtsScreenState extends State<CourtsScreen> {
             ),
             const SizedBox(height: 24),
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 1.2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemCount: _courts.length,
-                itemBuilder: (context, index) {
-                  final court = _courts[index];
-                  return _buildCourtCard(context, court, localizations);
+              child: Consumer<CurrencyProvider>(
+                builder: (context, currencyProvider, child) {
+                  final courts = _getCourtsList(currencyProvider);
+                  return GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      childAspectRatio: 1.2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemCount: courts.length,
+                    itemBuilder: (context, index) {
+                      final court = courts[index];
+                      return _buildCourtCard(context, court, localizations);
+                    },
+                  );
                 },
               ),
             ),
