@@ -1,0 +1,252 @@
+{
+  "@@locale": "en",
+  "appTitle": "Padel Admin Panel",
+  "@appTitle": {
+    "description": "Title of the application"
+  },
+  "dashboard": "Dashboard",
+  "@dashboard": {
+    "description": "Dashboard menu item"
+  },
+  "bookings": "Bookings",
+  "@bookings": {
+    "description": "Bookings menu item"
+  },
+  "courts": "Courts",
+  "@courts": {
+    "description": "Courts menu item"
+  },
+  "users": "Users",
+  "@users": {
+    "description": "Users menu item"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings menu item"
+  },
+  "reports": "Reports",
+  "@reports": {
+    "description": "Reports menu item"
+  },
+  "totalBookings": "Total Bookings",
+  "@totalBookings": {
+    "description": "Total bookings label"
+  },
+  "activeCourts": "Active Courts",
+  "@activeCourts": {
+    "description": "Active courts label"
+  },
+  "totalUsers": "Total Users",
+  "@totalUsers": {
+    "description": "Total users label"
+  },
+  "revenue": "Revenue",
+  "@revenue": {
+    "description": "Revenue label"
+  },
+  "todaysBookings": "Today's Bookings",
+  "@todaysBookings": {
+    "description": "Today's bookings title"
+  },
+  "courtName": "Court Name",
+  "@courtName": {
+    "description": "Court name label"
+  },
+  "status": "Status",
+  "@status": {
+    "description": "Status label"
+  },
+  "time": "Time",
+  "@time": {
+    "description": "Time label"
+  },
+  "customer": "Customer",
+  "@customer": {
+    "description": "Customer label"
+  },
+  "actions": "Actions",
+  "@actions": {
+    "description": "Actions label"
+  },
+  "view": "View",
+  "@view": {
+    "description": "View action"
+  },
+  "edit": "Edit",
+  "@edit": {
+    "description": "Edit action"
+  },
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete action"
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Add action"
+  },
+  "addCourt": "Add Court",
+  "@addCourt": {
+    "description": "Add court button"
+  },
+  "addUser": "Add User",
+  "@addUser": {
+    "description": "Add user button"
+  },
+  "name": "Name",
+  "@name": {
+    "description": "Name label"
+  },
+  "email": "Email",
+  "@email": {
+    "description": "Email label"
+  },
+  "phone": "Phone",
+  "@phone": {
+    "description": "Phone label"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save button"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button"
+  },
+  "confirmed": "Confirmed",
+  "@confirmed": {
+    "description": "Confirmed status"
+  },
+  "pending": "Pending",
+  "@pending": {
+    "description": "Pending status"
+  },
+  "cancelled": "Cancelled",
+  "@cancelled": {
+    "description": "Cancelled status"
+  },
+  "active": "Active",
+  "@active": {
+    "description": "Active status"
+  },
+  "inactive": "Inactive",
+  "@inactive": {
+    "description": "Inactive status"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language setting"
+  },
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button"
+  },
+  "search": "Search",
+  "@search": {
+    "description": "Search placeholder"
+  },
+  "filter": "Filter",
+  "@filter": {
+    "description": "Filter button"
+  },
+  "refresh": "Refresh",
+  "@refresh": {
+    "description": "Refresh button"
+  },
+  "noData": "No data available",
+  "@noData": {
+    "description": "No data message"
+  },
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Loading message"
+  },
+  "error": "Error",
+  "@error": {
+    "description": "Error message"
+  },
+  "success": "Success",
+  "@success": {
+    "description": "Success message"
+  },
+  "warning": "Warning",
+  "@warning": {
+    "description": "Warning message"
+  },
+  "bookingDetails": "Booking Details",
+  "@bookingDetails": {
+    "description": "Booking details title"
+  },
+  "courtDetails": "Court Details",
+  "@courtDetails": {
+    "description": "Court details title"
+  },
+  "userDetails": "User Details",
+  "@userDetails": {
+    "description": "User details title"
+  },
+  "date": "Date",
+  "@date": {
+    "description": "Date label"
+  },
+  "price": "Price",
+  "@price": {
+    "description": "Price label"
+  },
+  "duration": "Duration",
+  "@duration": {
+    "description": "Duration label"
+  },
+  "description": "Description",
+  "@description": {
+    "description": "Description label"
+  },
+  "location": "Location",
+  "@location": {
+    "description": "Location label"
+  },
+  "capacity": "Capacity",
+  "@capacity": {
+    "description": "Capacity label"
+  },
+  "amenities": "Amenities",
+  "@amenities": {
+    "description": "Amenities label"
+  },
+  "calendar": "Calendar",
+  "@calendar": {
+    "description": "Calendar menu item"
+  },
+  "viewBookings": "View Bookings",
+  "@viewBookings": {
+    "description": "View bookings for selected date"
+  },
+  "selectDate": "Select Date",
+  "@selectDate": {
+    "description": "Select date instruction"
+  },
+  "noBookingsForDate": "No bookings for this date",
+  "@noBookingsForDate": {
+    "description": "No bookings message for selected date"
+  },
+  "bookingsForDate": "Bookings for {date}",
+  "@bookingsForDate": {
+    "description": "Bookings for specific date title",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "today": "Today",
+  "@today": {
+    "description": "Today button"
+  },
+  "previousMonth": "Previous Month",
+  "@previousMonth": {
+    "description": "Previous month button"
+  },
+  "nextMonth": "Next Month",
+  "@nextMonth": {
+    "description": "Next month button"
+  }
+}
